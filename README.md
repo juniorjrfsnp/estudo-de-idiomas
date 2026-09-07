@@ -1,5 +1,7 @@
 # estudo-de-idiomas
 
+juniorjrfsnp.github.io
+
 # 📚 Guia de Estudos de Idiomas
 
 Este repositório foi estruturado para organizar anotações, vocabulário, exercícios e recursos de estudo de idiomas (como Inglês e Russo).
