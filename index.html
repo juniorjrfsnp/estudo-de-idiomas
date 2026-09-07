@@ -189,6 +189,26 @@ main{max-width:1040px;margin:0 auto;padding:44px 24px 90px}
 }
 .phrase-card.open .phrase-toggle{transform:rotate(45deg);color:var(--gold-deep);border-color:var(--gold)}
 
+/* ---------- Audio buttons ---------- */
+.audio-btn{
+  flex:none;display:inline-flex;align-items:center;justify-content:center;
+  width:24px;height:24px;border-radius:50%;border:1px solid var(--card-line);
+  background:var(--card);color:var(--pine);cursor:pointer;padding:0;
+  transition:background .15s,border-color .15s,color .15s,transform .1s;
+}
+.audio-btn svg{width:12px;height:12px;pointer-events:none}
+.audio-btn:hover{background:var(--pine);border-color:var(--pine);color:#fff}
+.audio-btn:active{transform:scale(.92)}
+.audio-btn.playing{background:var(--gold);border-color:var(--gold);color:#fff}
+.audio-btn[disabled]{opacity:.35;cursor:not-allowed}
+.audio-btn[disabled]:hover{background:var(--card);border-color:var(--card-line);color:var(--text-muted)}
+.phrase-head .audio-btn{width:26px;height:26px}
+.phrase-head .audio-btn svg{width:13px;height:13px}
+.tr-item{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+.tr-item .tr-body{flex:1;min-width:0}
+.tr-item.rtl{flex-direction:row-reverse}
+.tr-item.rtl .tr-body{text-align:right}
+
 .translations{
   display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));
   gap:10px 18px;margin-top:16px;padding-top:16px;border-top:1px dashed var(--card-line);
@@ -332,6 +352,37 @@ const LANG_CODES = {
 const RTL = new Set(["he","ar"]);
 const TARGET_LANGS = ["en","es","fr","de","ru","he","ar","hi","zh","no"];
 
+const LANG_BCP47 = {
+  pt:"pt-BR", en:"en-US", es:"es-ES", fr:"fr-FR", de:"de-DE",
+  ru:"ru-RU", he:"he-IL", ar:"ar-SA", hi:"hi-IN", zh:"zh-CN", no:"nb-NO"
+};
+
+// ---- Text-to-speech (Web Speech API) ----
+const speechSupported = typeof window !== 'undefined' && 'speechSynthesis' in window;
+let currentAudioBtn = null;
+
+function textForSpeech(text){
+  // Remove parenthetical transliterations, e.g. "你好 (Nǐ hǎo)" -> "你好"
+  return text.replace(/\([^)]*\)/g, ' ').replace(/\s+/g, ' ').trim();
+}
+
+function speakPhrase(text, langCode, btn){
+  if(!speechSupported) return;
+  window.speechSynthesis.cancel();
+  if(currentAudioBtn && currentAudioBtn !== btn) currentAudioBtn.classList.remove('playing');
+  const utter = new SpeechSynthesisUtterance(textForSpeech(text) || text);
+  utter.lang = LANG_BCP47[langCode] || 'pt-BR';
+  utter.rate = 0.92;
+  if(btn){
+    btn.classList.add('playing');
+    currentAudioBtn = btn;
+    utter.onend = utter.onerror = ()=>{ btn.classList.remove('playing'); if(currentAudioBtn===btn) currentAudioBtn=null; };
+  }
+  window.speechSynthesis.speak(utter);
+}
+
+const SPEAKER_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>';
+
 const state = {
   query: "",
   activeModule: "all",
@@ -455,8 +506,17 @@ function render(){
 
       const head2 = document.createElement('div');
       head2.className = 'phrase-head';
-      head2.innerHTML = `<span class="phrase-num">${p.num}</span><span class="phrase-pt">${escapeHtml(p.pt)}</span><span class="phrase-toggle">+</span>`;
-      head2.addEventListener('click', ()=> card.classList.toggle('open'));
+      head2.innerHTML = `<span class="phrase-num">${p.num}</span><span class="phrase-pt">${escapeHtml(p.pt)}</span><button type="button" class="audio-btn" title="Ouvir em português" aria-label="Ouvir em português">${SPEAKER_ICON}</button><span class="phrase-toggle">+</span>`;
+      head2.addEventListener('click', (e)=>{
+        if(e.target.closest('.audio-btn')) return;
+        card.classList.toggle('open');
+      });
+      const ptAudioBtn = head2.querySelector('.audio-btn');
+      if(!speechSupported) ptAudioBtn.disabled = true;
+      ptAudioBtn.addEventListener('click', (e)=>{
+        e.stopPropagation();
+        speakPhrase(p.pt, 'pt', ptAudioBtn);
+      });
       card.appendChild(head2);
 
       const grid = document.createElement('div');
@@ -467,7 +527,13 @@ function render(){
         if(!val) return;
         const item = document.createElement('div');
         item.className = 'tr-item' + (RTL.has(code) ? ' rtl' : '');
-        item.innerHTML = `<div class="tr-lang">${LANG_LABELS[code]}</div><div class="tr-text">${escapeHtml(val)}</div>`;
+        item.innerHTML = `<div class="tr-body"><div class="tr-lang">${LANG_LABELS[code]}</div><div class="tr-text">${escapeHtml(val)}</div></div><button type="button" class="audio-btn" title="Ouvir em ${LANG_LABELS[code]}" aria-label="Ouvir em ${LANG_LABELS[code]}">${SPEAKER_ICON}</button>`;
+        const trAudioBtn = item.querySelector('.audio-btn');
+        if(!speechSupported) trAudioBtn.disabled = true;
+        trAudioBtn.addEventListener('click', (e)=>{
+          e.stopPropagation();
+          speakPhrase(val, code, trAudioBtn);
+        });
         grid.appendChild(item);
       });
       card.appendChild(grid);
