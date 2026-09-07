@@ -1,6 +1,7 @@
 # estudo-de-idiomas
 
 juniorjrfsnp.github.io
+<https://juniorjrfsnp.github.io/estudo-de-idiomas/>
 
 # 📚 Guia de Estudos de Idiomas
 
