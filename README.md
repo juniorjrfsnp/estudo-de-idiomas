@@ -1,5 +1,76 @@
 # estudo-de-idiomas
 
+# 📚 Guia de Estudos de Idiomas
+
+Este repositório foi estruturado para organizar anotações, vocabulário, exercícios e recursos de estudo de idiomas (como Inglês e Russo).
+
+---
+
+## 🗂️ Estrutura do Repositório
+
+```text
+estudo-de-idiomas/
+├── english/
+├── russian/
+└── README.md
+```
+
+---
+
+## 📋 Lista de Metas
+
+- [ ] Praticar vocabulário diariamente por 15 minutos.
+- [ ] Revisar regras gramaticais e tempos verbais semanais.
+- [ ] Adicionar novas frases e exemplos ao repositório.
+- [ ] Realizar commits regulares com o progresso dos estudos.
+
+---
+
+## 🛠️ Comandos Git Úteis
+
+```bash
+# Ver o status das alterações
+git status
+
+# Adicionar arquivos ao staging
+git add .
+
+# Registrar os arquivos com uma mensagem
+git commit -m "docs: adiciona novas anotações de estudo"
+
+# Enviar alterações para o GitHub
+git push origin main
+```
+
+📋 Lista de Metas
+[ ] Praticar vocabulário diariamente por 15 minutos.
+
+[ ] Revisar regras gramaticais e tempos verbais semanais.
+
+[ ] Adicionar novas frases e exemplos ao repositório.
+
+[ ] Realizar commits regulares com o progresso dos estudos.
+
+🛠️ Comandos Git Úteis
+Bash
+
+# Ver o status das alterações
+
+git status
+
+# Adicionar arquivos ao staging
+
+git add .
+
+# Registrar os arquivos com uma mensagem
+
+git commit -m "docs: adiciona novas anotações de estudo"
+
+# Enviar alterações para o GitHub
+
+git push origin main
+"""
+
 
 Owner avatar
 estudo-de-idiomas
