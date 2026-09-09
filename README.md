@@ -45,6 +45,20 @@ git commit -m "docs: adiciona novas anotações de estudo"
 git push origin main
 ```
 
+## 🚀 Publicação no GitHub Pages
+
+O site é publicado automaticamente a cada `push` na branch `main` pelo workflow
+`.github/workflows/pages.yml`.
+
+Para registrar e enviar as alterações de uma vez:
+
+```bash
+./scripts/publicar.sh "feat: atualiza frases de estudo"
+```
+
+O endereço publicado é:
+<https://juniorjrfsn.github.io/estudo-de-idiomas/>
+
 📋 Lista de Metas
 [ ] Praticar vocabulário diariamente por 15 minutos.
 
