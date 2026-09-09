@@ -57,7 +57,7 @@ Para registrar e enviar as alterações de uma vez:
 ```
 
 O endereço publicado é:
-<https://juniorjrfsn.github.io/estudo-de-idiomas/>
+<https://juniorjrfsnp.github.io/estudo-de-idiomas/>
 
 📋 Lista de Metas
 [ ] Praticar vocabulário diariamente por 15 minutos.
